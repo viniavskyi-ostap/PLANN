@@ -1,0 +1,3 @@
+/home/ostap/Documents/University/ACS/PLANN/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/ostap/Documents/University/ACS/PLANN/cmake-build-debug/CMakeFiles/PLANN.dir
+/home/ostap/Documents/University/ACS/PLANN/cmake-build-debug/CMakeFiles/edit_cache.dir
