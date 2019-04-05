@@ -8,10 +8,10 @@
 #include "matrix.h"
 
 class LayersBuffer {
+public:
     Matrix a;
     Matrix da;
 
-public:
     void LayersBuffer(int units_number, int batch_size);
 };
 

@@ -8,6 +8,8 @@
 #include "matrix.h"
 
 class TrainCache {
+public:
+
     Matrix w;
     Matrix dw;
     Matrix z;
