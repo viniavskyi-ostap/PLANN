@@ -1,4 +1,4 @@
-#include "plann.h"
+#include "matrix.h"
 #include <stdio.h>
 #include <iostream>
 
@@ -14,7 +14,20 @@ int main() {
 }
 
 void test_first() {
+    Matrix m1{2, 2}, m2{2, 2}, m3{2, 2};
 
+    m1.set(0, 0, 1);
+    m1.set(0, 1, 1);
+    m1.set(1, 0, 1);
+    m1.set(1, 1, 1);
+
+    m2.set(0, 0, 1);
+    m2.set(0, 1, 1);
+    m2.set(1, 0, 0);
+    m2.set(1, 1, 1);
+
+    m1.multiply(m2, m3);
+    std::cout << m3.to_string();
 }
 
 void test_second() {
