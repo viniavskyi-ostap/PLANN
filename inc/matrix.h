@@ -9,6 +9,10 @@ class Matrix {
 
     float* data;
 
+    Matrix(int rows_number, int columns_number);
+    ~Matrix();
+
+
     int get_rows_number();
     int get_columns_number();
 
