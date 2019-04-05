@@ -11,7 +11,7 @@ float SigmoidActivation::compute_derivative_point(float x) {
 }
 
 void SigmoidActivation::compute(Matrix &input, Matrix &result) {
-    input.map(result, this->compute_point);
+    input.map(this->compute_point, result);
 }
 
 void SigmoidActivation::compute_derivative(Matrix &input, Matrix &result) {

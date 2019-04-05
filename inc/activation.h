@@ -9,9 +9,9 @@
 
 class Activation {
 public:
-    virtual void compute(Matrix &input, Matrix &result) = 0;
+    virtual void compute(const Matrix &input, Matrix &result) const = 0;
 
-    virtual void compute_derivative(Matrix &input, Matrix &result) = 0;
+    virtual void compute_derivative(Matrix &input, Matrix &result) const = 0;
 
     virtual ~Activation() = default;
 };
@@ -23,9 +23,9 @@ public:
     void compute_derivative(Matrix &input, Matrix &result);
 
 private:
-    float compute_point(float x);
+    static float compute_point(float x);
 
-    float compute_derivative_point(float x);
+    static float compute_derivative_point(float x);
 };
 
 class SoftmaxActivation : public Activation {
@@ -42,9 +42,9 @@ public:
     void compute_derivative(Matrix &input, Matrix &result);
 
 private:
-    float compute_point(float x);
+    static float compute_point(float x);
 
-    float compute_derivative_point(float x);
+    static float compute_derivative_point(float x);
 };
 
 class LinearActivation : public Activation {
@@ -54,9 +54,9 @@ public:
     void compute_derivative(Matrix &input, Matrix &result);
 
 private:
-    float compute_point(float x);
+    static float compute_point(float x);
 
-    float compute_derivative_point(float x);
+    static float compute_derivative_point(float x);
 };
 
 
