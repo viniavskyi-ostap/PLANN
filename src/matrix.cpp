@@ -11,7 +11,7 @@ Matrix::Matrix (int rows_number, int columns_number) {
     data = new float[rows_number * columns_number];
 }
 
-inline float Matrix::get(int row, int column) {
+inline float Matrix::get(int row, int column) const {
     return data[columns_number * row + column];
 }
 
@@ -19,10 +19,10 @@ inline void Matrix::set(int row, int column, float value) {
     data[columns_number * row + column] = value;
 }
 
-int Matrix::get_rows_number() {
+int Matrix::get_rows_number() const {
     return rows_number;
 }
-int Matrix::get_columns_number() {
+int Matrix::get_columns_number() const {
     return columns_number;
 }
 
@@ -32,7 +32,7 @@ std::string Matrix::to_string() {
     for (int row = 0; row < rows_number; ++row) {
         ss << '|';
         for (int column = 0; column < columns_number; ++column) {
-            ss << std::setw(10) << data[columns_number * row + column];
+            ss << std::setw(5) << data[columns_number * row + column];
         }
         ss << "|\n";
     }
@@ -41,7 +41,7 @@ std::string Matrix::to_string() {
 }
 
 
-void Matrix::multiply(Matrix& rhs, Matrix& result) {
+void Matrix::multiply(Matrix& rhs, Matrix& result) const {
     if (columns_number != rhs.rows_number ||
     rows_number != result.rows_number ||
     rhs.columns_number != result.columns_number) {
@@ -61,16 +61,14 @@ void Matrix::multiply(Matrix& rhs, Matrix& result) {
     }
 }
 
-void Matrix::transpose(Matrix& result) {
+void Matrix::transpose(Matrix& result) const {
     if (columns_number != result.rows_number || rows_number != result.columns_number) {
         throw std::invalid_argument("Matrix sizes don't match.");
     }
 
     for (int row = 0; row < result.rows_number; ++row) {
-        for (int column = 0; column < result.columns_number; ++columns_number) {
+        for (int column = 0; column < result.columns_number; ++column) {
             result.set(row, column, get(column, row));
         }
     }
 }
-
-

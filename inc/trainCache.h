@@ -9,6 +9,7 @@
 
 class TrainCache {
 public:
+    TrainCache(int previous_units_number, int current_units_number, int batch_size);
 
     Matrix w;
     Matrix dw;
@@ -16,8 +17,6 @@ public:
     Matrix dz;
     Matrix at;
     Matrix wt;
-
-    void TrainCache(int previous_units_number, int current_units_number, int batch_size);
 };
 
 #endif //PLANN_TRAINCASHE_H

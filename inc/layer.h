@@ -28,11 +28,11 @@ public:
 
     void clear_train_cache();
 
-    void forward(LayersBuffer &prev, LayersBuffer &next);
-
-    void backward(LayersBuffer &prev, LayersBuffer &next);
-
-    int get_units_number();
+//    void forward(LayersBuffer &prev, LayersBuffer &next);
+//
+//    void backward(LayersBuffer &prev, LayersBuffer &next);
+//
+//    int get_units_number();
 };
 
 #endif //PLANN_LAYER_H
