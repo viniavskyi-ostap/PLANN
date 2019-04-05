@@ -9,10 +9,10 @@
 
 class LayersBuffer {
 public:
+    LayersBuffer(int units_number, int batch_size);
+
     Matrix a;
     Matrix da;
-
-    void LayersBuffer(int units_number, int batch_size);
 };
 
 #endif //PLANN_LAYERSBUFFER_H

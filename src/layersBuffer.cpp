@@ -4,7 +4,7 @@
 
 #include "layersBuffer.h"
 
-void LayersBuffer::LayersBuffer(int units_number, int batch_size) {
-    this->a = Matrix(units_number, batch_size);
-    this->da = Matrix(units_number, batch_size);
+LayersBuffer::LayersBuffer(int units_number, int batch_size) {
+    a = Matrix(units_number, batch_size);
+    da = Matrix(units_number, batch_size);
 }

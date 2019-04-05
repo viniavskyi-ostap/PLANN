@@ -1,21 +1,11 @@
 //
-// Created by ostap on 05.04.19.
+// Created by User on 4/5/2019.
 //
-#include <cmath>
+
 #include "loss.h"
 
-float MeanSquareError::compute(Matrix &y_pred, Matrix &y_true) const {
-//    TODO:
+float Loss::compute(Matrix &y_pred, Matrix &y_true) {
+    return 0;
 }
 
-void MeanSquareError::compute_derivative(Matrix &y_pred, Matrix &y_true, Matrix &result) const {
-//    TODO:
-}
-
-float MeanSquareError::compute_point(float y_pred, float y_true) const {
-    return powf(y_pred - y_true, 2.0f);
-}
-
-float MeanSquareError::compute_derivative_point(float y_pred, float y_true) const {
-    return 2 * (y_pred - y_true);
-}
+void Loss::compute_derivative(Matrix &x, Matrix &y, Matrix &result) {}
