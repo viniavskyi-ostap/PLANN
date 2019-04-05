@@ -21,6 +21,11 @@ public:
     void compute(Matrix &input, Matrix &result);
 
     void compute_derivative(Matrix &input, Matrix &result);
+
+private:
+    float compute_point(float x);
+
+    float compute_derivative_point(float x);
 };
 
 class SoftmaxActivation : public Activation {
@@ -35,6 +40,11 @@ public:
     void compute(Matrix &input, Matrix &result);
 
     void compute_derivative(Matrix &input, Matrix &result);
+
+private:
+    float compute_point(float x);
+
+    float compute_derivative_point(float x);
 };
 
 class LinearActivation : public Activation {
@@ -42,6 +52,11 @@ public:
     void compute(Matrix &input, Matrix &result);
 
     void compute_derivative(Matrix &input, Matrix &result);
+
+private:
+    float compute_point(float x);
+
+    float compute_derivative_point(float x);
 };
 
 
