@@ -14,13 +14,16 @@
 class Layer {
 private:
     int units_number;
-    Activation activation_func;
+
+    Activation *activation_func;
     Matrix w;
     Matrix b;
-    TrainCache cache;
+    TrainCache *cache;
 
 public:
-    void Layer(int units_number, Activation activation_func);
+    Layer(int units_number, Activation *activation_func);
+
+    ~Layer();
 
     void init_weights(int previous_units_number);
 
@@ -28,11 +31,11 @@ public:
 
     void clear_train_cache();
 
-//    void forward(LayersBuffer &prev, LayersBuffer &next);
-//
-//    void backward(LayersBuffer &prev, LayersBuffer &next);
-//
-//    int get_units_number();
+    void forward(LayersBuffer *prev, LayersBuffer *next);
+
+    void backward(LayersBuffer *prev, LayersBuffer *next);
+
+    int get_units_number();
 };
 
 #endif //PLANN_LAYER_H

@@ -4,7 +4,7 @@
 #include <iomanip>
 
 
-Matrix::Matrix (int rows_number, int columns_number) {
+Matrix::Matrix(int rows_number, int columns_number) {
     this->rows_number = rows_number;
     this->columns_number = columns_number;
 
@@ -22,6 +22,7 @@ inline void Matrix::set(int row, int column, float value) {
 int Matrix::get_rows_number() const {
     return rows_number;
 }
+
 int Matrix::get_columns_number() const {
     return columns_number;
 }
@@ -41,10 +42,10 @@ std::string Matrix::to_string() {
 }
 
 
-void Matrix::multiply(Matrix& rhs, Matrix& result) const {
+void Matrix::multiply(Matrix &rhs, Matrix &result) const {
     if (columns_number != rhs.rows_number ||
-    rows_number != result.rows_number ||
-    rhs.columns_number != result.columns_number) {
+        rows_number != result.rows_number ||
+        rhs.columns_number != result.columns_number) {
         throw std::invalid_argument("Matrix sizes don't match.");
     }
 
@@ -61,7 +62,7 @@ void Matrix::multiply(Matrix& rhs, Matrix& result) const {
     }
 }
 
-void Matrix::transpose(Matrix& result) const {
+void Matrix::transpose(Matrix &result) const {
     if (columns_number != result.rows_number || rows_number != result.columns_number) {
         throw std::invalid_argument("Matrix sizes don't match.");
     }
@@ -72,3 +73,13 @@ void Matrix::transpose(Matrix& result) const {
         }
     }
 }
+
+void Matrix::map(std::function<float(float)> f, Matrix &result) const {}
+
+void Matrix::combine(Matrix &rhs, std::function<float(float, float)> f, Matrix &result) const {}
+
+void Matrix::reduce_row(std::function<float(float, float)> f, Matrix &result) const {}
+
+void Matrix::add_column(Matrix &rhs) {}
+
+void Matrix::rows_submatrix(Matrix &result, std::vector<int> indexes, int start, int end) const {}

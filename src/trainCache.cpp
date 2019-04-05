@@ -6,7 +6,7 @@
 
 
 TrainCache::TrainCache(int previous_units_number, int current_units_number, int batch_size) {
-    w = Matrix(previous_units_number, current_units_number);
+    db = Matrix(current_units_number, 1);
     dw = Matrix(previous_units_number, current_units_number);
     wt = Matrix(current_units_number, previous_units_number);
     z = Matrix(current_units_number, batch_size);
