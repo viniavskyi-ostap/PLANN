@@ -4,7 +4,7 @@
 
 #include "trainCache.h"
 
-class trainCache{
+class trainCache {
     Matrix w;
     Matrix dw;
     Matrix z;
@@ -12,7 +12,8 @@ class trainCache{
     Matrix at;
     Matrix wt;
 
-    void TrainCache(int previous_units_number, int current_units_number, int batch_size){
+public :
+    void TrainCache(int previous_units_number, int current_units_number, int batch_size) {
         this->w = new Matrix(previous_units_number, current_units_number);
         this->dw = new Matrix(previous_units_number, current_units_number);
         this->wt = new Matrix(current_units_number, previous_units_number);
