@@ -8,11 +8,21 @@
 #include "matrix.h"
 
 class Loss {
-private:
-    float compute(Matrix &y_pred, Matrix &y_true);
+public:
+    virtual float compute(Matrix &y_predicted, Matrix &y_true, Matrix &result) const = 0;
 
-    void compute_derivative(Matrix &x, Matrix &y, Matrix &result);
+    virtual void compute_derivative(Matrix &y_predicted, Matrix &y_true, Matrix &result) const = 0;
 
+    virtual ~Loss() = default;
+
+};
+
+
+class MeanSquareError : public Loss {
+public:
+    float compute(Matrix &y_predicted, Matrix &y_true, Matrix &result) const override;
+
+    void compute_derivative(Matrix &y_predicted, Matrix &y_true, Matrix &result) const override;
 };
 
 #endif //PLANN_LOSS_H
