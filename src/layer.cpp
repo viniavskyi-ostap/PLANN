@@ -1,7 +1,3 @@
-//
-// Created by iatsuk on 05.04.2019.
-//
-
 #include "layer.h"
 #include <random>
 #include <iostream>
@@ -12,8 +8,9 @@ Layer::Layer(int units_number, Activation *activation_func) {
     this->activation_func = activation_func;
 }
 
-
 Layer::~Layer() {
+    delete w;
+    delete b;
     delete cache;
 }
 
@@ -47,16 +44,22 @@ void Layer::forward(LayersBuffer *prev, LayersBuffer *next) {
 }
 
 void Layer::backward(LayersBuffer *prev, LayersBuffer *next) {
+    int m = cache->z->get_columns_number();
+
+    // Calculating dz
     activation_func->compute_derivative(*cache->z, *cache->z);
     next->da->combine(*cache->z, [](float x, float y) { return x * y; }, *cache->dz);
+
+    // Calculating dW
     prev->a->transpose(*cache->at);
     cache->z->multiply(*cache->at, *cache->dw);
-
-    int m = cache->z->get_columns_number();
     cache->dw->map([m](float x) { return x / m; }, *cache->dw);
 
+    // Calculating db
     cache->dz->reduce_row([](float x, float y) { return x + y; }, *cache->db, 0);
     cache->db->map([m](float x) { return x / m; }, *cache->db);
+
+    // Calculating dA
     w->transpose(*cache->wt);
     cache->wt->multiply(*cache->dz, *prev->da);
 }

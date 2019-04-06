@@ -37,14 +37,13 @@ std::string Matrix::to_string() {
     for (int row = 0; row < rows_number; ++row) {
         ss << '|';
         for (int column = 0; column < columns_number; ++column) {
-            ss << std::setw(5) << data[columns_number * row + column];
+            ss << std::setw(7) << data[columns_number * row + column] << " ";
         }
         ss << "|\n";
     }
 
     return ss.str();
 }
-
 
 void Matrix::multiply(Matrix &rhs, Matrix &result) const {
     if (columns_number != rhs.rows_number ||
@@ -57,11 +56,28 @@ void Matrix::multiply(Matrix &rhs, Matrix &result) const {
         for (int column = 0; column < result.columns_number; column++) {
             float value = 0;
 
-            for (int k = 0; k < result.rows_number; k++) {
+            for (int k = 0; k < columns_number; k++) {
                 value += get(row, k) * rhs.get(k, column);
             }
 
             result.set(row, column, value);
+        }
+    }
+}
+
+void Matrix::optimised_multiply(const Matrix &rhs, Matrix &result) const {
+    for (int row = 0; row < result.rows_number; ++row) {
+        for (int column = 0; column < result.columns_number; ++column) {
+            result.set(row, column, 0);
+        }
+
+        for (int k = 0; k < columns_number; ++k) {
+            float this_value = data[row * rows_number + k];
+
+            for (int column = 0; column < result.columns_number; ++column) {
+                result.data[row * result.columns_number + column] +=
+                        this_value * rhs.data[k * rhs.columns_number + column];
+            }
         }
     }
 }

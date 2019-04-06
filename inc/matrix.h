@@ -29,6 +29,8 @@ public:
 
     void multiply(Matrix &rhs, Matrix &result) const;
 
+    void optimised_multiply(const Matrix &rhs, Matrix &result) const;
+
     void transpose(Matrix &result) const;
 
     void map(std::function<float(float)> f, Matrix &result) const;

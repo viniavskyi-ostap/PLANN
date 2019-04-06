@@ -1,7 +1,3 @@
-//
-// Created by User on 4/5/2019.
-//
-
 #include <algorithm>
 #include <random>
 #include <iostream>
@@ -55,6 +51,7 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, Lo
     Matrix current_res(layers[layers.size() - 1]->get_units_number(), batch_size);
     for (int i = 0; i < epochs; ++i) {
         std::shuffle(indexes.begin(), indexes.end(), g);
+
         for (int j = 0; j + batch_size <= indexes.size(); j += batch_size) {
             // cut batch matrices
             x.rows_submatrix(x_batch, indexes, j, j + batch_size);
@@ -68,8 +65,8 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, Lo
 
             // back propagation
             y_batch.transpose(*buffers[buffers.size() - 1]->da);
-            std::cout << loss_func->compute(*buffers[buffers.size() - 1]->a, *buffers[buffers.size() - 1]->da, current_res) << "\n";
-            loss_func->compute_derivative(*buffers[buffers.size() - 1]->a, *buffers[buffers.size() - 1]->da,
+            std::cout << "Current: " << loss_func->compute(*buffers[buffers.size() - 1]->a, y_batch, current_res) << "\n";
+            loss_func->compute_derivative(*buffers[buffers.size() - 1]->a, y_batch,
                                           *buffers[buffers.size() - 1]->da);
 
             for (int z = (int) (layers.size() - 1); z >= 0; --z) {
@@ -77,11 +74,12 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, Lo
 //                std::cout << layers[z]->cache->dw->to_string() << "\n\n";
             }
 
-
             //update weights
             std::for_each(layers.begin(), layers.end(), [rate](Layer *layer) { layer->update_weights(rate); });
         }
 
 //        break;
     }
+
+    std::cout << "Matrix" << std::endl << layers[1]->w->to_string() << std::endl;
 }

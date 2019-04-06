@@ -7,6 +7,7 @@
 #include <random>
 #include "loss.h"
 #include <algorithm>
+#include <loss.h>
 #include "model.h"
 #include "layer.h"
 
@@ -33,25 +34,13 @@ int main() {
         }
     }
 
-    m.fit(x, y, 2, 0.5f, 2, new MeanSquareError());
-
+    m.fit(x, y, 2, 0.01f, 10, new MeanSquareError());
 }
 
 void test_first() {
-    Matrix m1{2, 2}, m2{2, 2}, m3{2, 2};
+    Matrix m1{10, 10};
 
-    m1.set(0, 0, 1);
-    m1.set(0, 1, 1);
-    m1.set(1, 0, 1);
-    m1.set(1, 1, 1);
-
-    m2.set(0, 0, 1);
-    m2.set(0, 1, 1);
-    m2.set(1, 0, 0);
-    m2.set(1, 1, 1);
-
-    m1.multiply(m2, m3);
-    std::cout << m3.to_string();
+    std::cout << m1.to_string();
 }
 
 void test_second() {

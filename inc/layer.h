@@ -38,6 +38,9 @@ public:
     int get_units_number();
 
     void update_weights(float rate);
+
+    // TODO remove
+    friend class Model;
 };
 
 #endif //PLANN_LAYER_H

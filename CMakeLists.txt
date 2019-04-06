@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.0)
 project(PLANN)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -10,5 +10,5 @@ include_directories(inc src)
 
 add_library(PLANN ${header_files} ${source_files})
 
-add_executable(test src/main.cpp)
-target_link_libraries(test PLANN)
+add_executable(plann_test src/main.cpp)
+target_link_libraries(plann_test PLANN)
