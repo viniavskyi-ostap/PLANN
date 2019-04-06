@@ -33,7 +33,7 @@ int main() {
         }
     }
 
-    m.fit(x, y, 2, 0.5f, 2, new MeanSquareError());
+    m.fit(x, y, 2, 0.001f, 2, new MeanSquareError());
 
 }
 

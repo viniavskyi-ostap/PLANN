@@ -15,6 +15,8 @@ Layer::Layer(int units_number, Activation *activation_func) {
 
 Layer::~Layer() {
     delete cache;
+    delete w;
+    delete b;
 }
 
 void Layer::init_weights(int previous_units_number) {
