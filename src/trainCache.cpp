@@ -13,3 +13,12 @@ TrainCache::TrainCache(int previous_units_number, int current_units_number, int 
     dz = new Matrix(current_units_number, batch_size);
     at = new Matrix(batch_size, previous_units_number);
 }
+
+TrainCache::~TrainCache() {
+    delete db;
+    delete dw;
+    delete wt;
+    delete z;
+    delete dz;
+    delete at;
+}
