@@ -7,7 +7,6 @@
 #include <random>
 #include "loss.h"
 #include <algorithm>
-#include <loss.h>
 #include "model.h"
 #include "layer.h"
 

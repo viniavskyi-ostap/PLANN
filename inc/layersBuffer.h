@@ -10,6 +10,7 @@
 class LayersBuffer {
 public:
     LayersBuffer(int units_number, int batch_size);
+    ~LayersBuffer();
 
     Matrix *a;
     Matrix *da;

@@ -12,6 +12,8 @@ Layer::~Layer() {
     delete w;
     delete b;
     delete cache;
+    delete w;
+    delete b;
 }
 
 void Layer::init_weights(int previous_units_number) {
