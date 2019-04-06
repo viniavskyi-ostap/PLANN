@@ -15,7 +15,7 @@ public:
     Matrix() = default;
 
     Matrix(int rows_number, int columns_number);
-//    ~Matrix();
+    ~Matrix();
 
     int get_rows_number() const;
 
@@ -35,7 +35,7 @@ public:
 
     void combine(Matrix &rhs, std::function<float(float, float)> f, Matrix &result) const;
 
-    void reduce_row(std::function<float(float, float)> f, Matrix &result) const;
+    void reduce_row(std::function<float(float, float)> f, Matrix &result, float initial_value) const;
 
     void add_column(Matrix &rhs);
 

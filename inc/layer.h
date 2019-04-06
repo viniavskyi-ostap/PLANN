@@ -15,10 +15,10 @@ class Layer {
 private:
     int units_number;
 
-    Activation *activation_func;
-    Matrix w;
-    Matrix b;
-    TrainCache *cache;
+    Activation *activation_func = nullptr;
+    Matrix *b;
+    Matrix *w;
+    TrainCache *cache = nullptr;
 
 public:
     Layer(int units_number, Activation *activation_func);
@@ -36,6 +36,8 @@ public:
     void backward(LayersBuffer *prev, LayersBuffer *next);
 
     int get_units_number();
+
+    void update_weights(float rate);
 };
 
 #endif //PLANN_LAYER_H
