@@ -11,6 +11,7 @@ class TrainCache {
 public:
     TrainCache() = default;
     TrainCache(int previous_units_number, int current_units_number, int batch_size);
+    ~TrainCache();
 
     Matrix *db;
     Matrix *dw;
