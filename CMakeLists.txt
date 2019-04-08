@@ -4,7 +4,7 @@ project(PLANN)
 set(CMAKE_CXX_STANDARD 17)
 
 set(header_files inc/activation.h inc/layersBuffer.h inc/matrix.h inc/trainCache.h inc/layer.h inc/loss.h inc/model.h)
-set(source_files src/activation.cpp src/layersBuffer.cpp src/matrix.cpp src/trainCache.cpp src/layer.cpp  src/model.cpp  src/loss.cpp)
+set(source_files src/activation.cpp src/layersBuffer.cpp src/matrix.cpp src/trainCache.cpp src/layer.cpp  src/model.cpp  src/loss.cpp inc/plann.h)
 
 include_directories(inc src)
 

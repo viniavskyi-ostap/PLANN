@@ -141,7 +141,7 @@ void Matrix::add_column(Matrix &rhs) {
 
     int size = rows_number * columns_number;
     for (int i = 0; i < size; ++i) {
-        data[i] += rhs.data[i / rows_number];
+        data[i] += rhs.data[i / columns_number];
     }
 }
 

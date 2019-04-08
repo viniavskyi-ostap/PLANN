@@ -12,8 +12,6 @@ Layer::~Layer() {
     delete w;
     delete b;
     delete cache;
-    delete w;
-    delete b;
 }
 
 void Layer::init_weights(int previous_units_number) {
@@ -21,13 +19,13 @@ void Layer::init_weights(int previous_units_number) {
     b = new Matrix(units_number, 1);
 
     std::default_random_engine generator;
-    std::normal_distribution<float> standard_normal(2, 1);
+    std::normal_distribution<float> standard_normal(0.001, 0.05);
 
     for (int row = 0; row < w->get_rows_number(); ++row) {
         for (int column = 0; column < w->get_columns_number(); ++column) {
-            w->set(row, column, 1.1);
+            w->set(row, column, standard_normal(generator));
         }
-        b->set(row, 0, standard_normal(generator));
+        b->set(row, 0, 0);
     }
 }
 
@@ -41,9 +39,16 @@ void Layer::clear_train_cache() {
 
 void Layer::forward(LayersBuffer *prev, LayersBuffer *next) {
     w->multiply(*prev->a, *cache->z);
+//    std::cout << "w: " << this->w->to_string() << std::endl;
     cache->z->add_column(*b);
+//    std::cout << "z: " << this->cache->z->to_string() << std::endl;
+
     activation_func->compute(*cache->z, *next->a);
-}
+//    std::cout << "X size: " << prev->a->get_columns_number() << "  " << prev-> a->get_rows_number() << std::endl;
+//    std::cout << "X: " << prev->a->to_string() << std::endl;
+//    std::cout << "b: " << this->b->to_string() << std::endl;
+//    std::cout << "A: " << next->a->to_string() << std::endl;
+    }
 
 void Layer::backward(LayersBuffer *prev, LayersBuffer *next) {
     int m = cache->z->get_columns_number();
@@ -54,7 +59,7 @@ void Layer::backward(LayersBuffer *prev, LayersBuffer *next) {
 
     // Calculating dW
     prev->a->transpose(*cache->at);
-    cache->z->multiply(*cache->at, *cache->dw);
+    cache->dz->multiply(*cache->at, *cache->dw);
     cache->dw->map([m](float x) { return x / m; }, *cache->dw);
 
     // Calculating db
@@ -73,7 +78,7 @@ int Layer::get_units_number() {
 void Layer::update_weights(float rate) {
     cache->dw->map([rate](float x) { return rate * x; }, *cache->dw);
     cache->db->map([rate](float x) { return rate * x; }, *cache->db);
-
+//    //
     w->combine(*cache->dw, [](float x, float y) { return x - y; }, *w);
     b->combine(*cache->db, [](float x, float y) { return x - y; }, *b);
 }

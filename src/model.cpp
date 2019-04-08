@@ -5,8 +5,8 @@
 
 
 Model::Model(int input_size, std::vector<Layer *> layers) {
-    if (layers.size() < 2) {
-        throw std::invalid_argument("Layers must have at least two elements.");
+    if (layers.empty()) {
+        throw std::invalid_argument("Layers must have at least one elements.");
     }
 
     this->layers = layers;
@@ -50,6 +50,7 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, Lo
 
     Matrix current_res(layers[layers.size() - 1]->get_units_number(), batch_size);
     for (int i = 0; i < epochs; ++i) {
+        float total_loss = 0;
         std::shuffle(indexes.begin(), indexes.end(), g);
 
         for (int j = 0; j + batch_size <= indexes.size(); j += batch_size) {
@@ -65,21 +66,20 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, Lo
 
             // back propagation
             y_batch.transpose(*buffers[buffers.size() - 1]->da);
-            std::cout << "Current: " << loss_func->compute(*buffers[buffers.size() - 1]->a, y_batch, current_res) << "\n";
-            loss_func->compute_derivative(*buffers[buffers.size() - 1]->a, y_batch,
+            total_loss += loss_func->compute(*buffers[buffers.size() - 1]->a, *buffers[buffers.size() - 1]->da,
+                                             current_res);
+            loss_func->compute_derivative(*buffers[buffers.size() - 1]->a, *buffers[buffers.size() - 1]->da,
                                           *buffers[buffers.size() - 1]->da);
-
             for (int z = (int) (layers.size() - 1); z >= 0; --z) {
                 layers[z]->backward(buffers[z], buffers[z + 1]);
-//                std::cout << layers[z]->cache->dw->to_string() << "\n\n";
+//                *            }
+
+                //update weights
+                std::for_each(layers.begin(), layers.end(), [rate](Layer *layer) { layer->update_weights(rate); });
             }
 
-            //update weights
-            std::for_each(layers.begin(), layers.end(), [rate](Layer *layer) { layer->update_weights(rate); });
         }
 
-//        break;
+        std::cout <<  "Current total loss: " <<  total_loss << std::endl;
     }
-
-    std::cout << "Matrix" << std::endl << layers[1]->w->to_string() << std::endl;
 }
