@@ -36,6 +36,8 @@ public:
 
     void transpose(Matrix *result) const;
 
+    void mapIndexed(const float (*f)(float, int, int), Matrix *result) const;
+
     void map(std::function<float(float)> f, Matrix *result) const;
 
     void combine(Matrix *rhs, std::function<float(float, float)> f, Matrix *result) const;

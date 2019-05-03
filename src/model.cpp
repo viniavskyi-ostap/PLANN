@@ -71,10 +71,11 @@ void Model::fit(Matrix *x, Matrix *y, int batch_size, float rate, int epochs, st
             }
 
             // back propagation
-            y_batch.transpose(buffers[buffers.size() - 1]->da);
-            total_loss += loss_func->compute(buffers[buffers.size() - 1]->a, buffers[buffers.size() - 1]->da,
-                                             &current_res);
-            loss_func->compute_derivative(buffers[buffers.size() - 1]->a, buffers[buffers.size() - 1]->da,
+            y_batch.transpose(&current_res);
+            total_loss += loss_func->compute(buffers[buffers.size() - 1]->a, &current_res,
+                                             buffers[buffers.size() - 1]->da);
+            y_batch.transpose(&current_res);
+            loss_func->compute_derivative(buffers[buffers.size() - 1]->a, &current_res,
                                           buffers[buffers.size() - 1]->da);
             for (int z = (int) (layers.size() - 1); z >= 0; --z) {
                 layers[z]->backward(buffers[z], buffers[z + 1]);

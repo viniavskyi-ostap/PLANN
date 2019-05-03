@@ -115,6 +115,18 @@ void Matrix::map(std::function<float(float)> f, Matrix *result) const {
     }
 }
 
+void Matrix::mapIndexed(const float (*f)(float, int, int), Matrix *result) const {
+    if (rows_number != result->rows_number || columns_number != result->columns_number) {
+        throw std::invalid_argument("Matrix sizes don't match.");
+    }
+
+    for (int i = 0; i < rows_number; ++i) {
+        for (int j = 0; j < columns_number; ++j) {
+            result->set(i, j, f(get(i, j), i, j));
+        }
+    }
+}
+
 void Matrix::combine(Matrix *rhs, std::function<float(float, float)> f, Matrix *result) const {
     if (rows_number != rhs->rows_number || columns_number != rhs->columns_number ||
         rows_number != result->rows_number ||

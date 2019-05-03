@@ -34,4 +34,13 @@ public:
     void compute_derivative(Matrix *y_predicted, Matrix *y_true, Matrix *result) const override;
 };
 
+class CategoricalCrossEntropy : public Loss {
+    void softmax(Matrix *x, Matrix *y_pred) const;
+
+public:
+    float compute(Matrix *y_predicted, Matrix *y_true, Matrix *result) const override;
+
+    void compute_derivative(Matrix *y_predicted, Matrix *y_true, Matrix *result) const override;
+};
+
 #endif //PLANN_LOSS_H

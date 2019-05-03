@@ -35,12 +35,6 @@ private:
     static float compute_derivative_point(float x);
 };
 
-class SoftmaxActivation : public Activation {
-public:
-    void compute(Matrix *input, Matrix *result) const override;
-
-    void compute_derivative(Matrix *input, Matrix *result) const override;
-};
 
 class ReluActivation : public Activation {
 public:

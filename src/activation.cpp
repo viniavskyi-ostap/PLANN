@@ -8,8 +8,6 @@ Activation *ActivationFactory::get_activation(std::string &name) {
         return new ReluActivation();
     } else if (name == "linear") {
         return new LinearActivation();
-    } else if (name == "softmax") {
-        return new SoftmaxActivation();
     }
 
     throw std::invalid_argument(name + " is invalid activation function.");
@@ -63,13 +61,4 @@ void LinearActivation::compute(Matrix *input, Matrix *result) const {
 
 void LinearActivation::compute_derivative(Matrix *input, Matrix *result) const {
     input->map(this->compute_derivative_point, result);
-}
-
-// SoftMax activation
-void SoftmaxActivation::compute(Matrix *input, Matrix *result) const {
-//    TODO: implement softmax compute
-}
-
-void SoftmaxActivation::compute_derivative(Matrix *input, Matrix *result) const {
-//    TODO: implement softmax derivative
 }
