@@ -15,6 +15,10 @@ Model::Model(int input_size, std::vector<Layer *> layers) {
     init_weights();
 }
 
+Model::~Model() {
+    for (auto layer: layers) delete layer;
+}
+
 void Model::init_weights() {
     layers[0]->init_weights(input_size);
 
@@ -23,21 +27,23 @@ void Model::init_weights() {
     }
 }
 
-std::vector<LayersBuffer *> Model::create_layers_buffer(int batch_size) {
-    std::vector<LayersBuffer *> buffers;
+
+template<typename T>
+std::vector<T *> Model::create_layers_buffer(int batch_size) {
+    std::vector<T *> buffers;
     buffers.reserve(layers.size() + 1);
 
-    buffers.push_back(new LayersBuffer(input_size, batch_size));
-    std::for_each(layers.begin(), layers.end(), [&buffers, batch_size](Layer *layer) {
-        buffers.push_back(new LayersBuffer(layer->get_units_number(), batch_size));
-    });
+    buffers.push_back(new T(input_size, batch_size));
+    for (auto layer: layers) buffers.push_back(new T(layer->get_units_number(), batch_size));
 
     return buffers;
 }
 
-void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, Loss *loss_func) {
-    std::for_each(layers.begin(), layers.end(), [batch_size](Layer *layer) { layer->init_train_cache(batch_size); });
-    std::vector<LayersBuffer *> buffers = create_layers_buffer(batch_size);
+void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, std::string loss_func_name) {
+    Loss* loss_func = LossFactory::get_loss(loss_func_name);
+
+    for (auto layer: layers) layer->init_train_cache(batch_size);
+    std::vector<FitLayersBuffer *> buffers = create_layers_buffer<FitLayersBuffer>(batch_size);
     Matrix x_batch(batch_size, x.get_columns_number());
     Matrix y_batch(batch_size, y.get_columns_number());
 
@@ -72,14 +78,34 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, Lo
                                           *buffers[buffers.size() - 1]->da);
             for (int z = (int) (layers.size() - 1); z >= 0; --z) {
                 layers[z]->backward(buffers[z], buffers[z + 1]);
-//                *            }
 
                 //update weights
-                std::for_each(layers.begin(), layers.end(), [rate](Layer *layer) { layer->update_weights(rate); });
+                for (auto layer: layers) layer->update_weights(rate);
             }
 
         }
 
         std::cout <<  "Current total loss: " <<  total_loss << std::endl;
     }
+
+    for (auto buffer : buffers) delete buffer;
+    for (auto layer: layers) layer->clear_train_cache();
+}
+
+Matrix Model::predict(Matrix& x) {
+    int size = x.get_rows_number();
+
+    std::vector<PredictLayersBuffer *> buffers = create_layers_buffer<PredictLayersBuffer>(size);
+
+    x.transpose(*buffers[0]->a);
+    //forward propagation
+    for (int i = 0; i < layers.size(); ++i) {
+        layers[i]->forward(buffers[i], buffers[i + 1]);
+    }
+
+    Matrix* final_buffer = buffers[buffers.size() - 1]->a;
+    Matrix result(final_buffer->get_columns_number(), final_buffer->get_rows_number());
+    final_buffer->transpose(result);
+    for (auto buffer : buffers) delete buffer;
+    return result;
 }

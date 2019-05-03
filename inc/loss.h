@@ -7,6 +7,7 @@
 
 #include "matrix.h"
 
+
 class Loss {
 public:
     virtual float compute(Matrix &y_predicted, Matrix &y_true, Matrix &result) const = 0;
@@ -15,6 +16,13 @@ public:
 
     virtual ~Loss() = default;
 
+};
+
+
+class LossFactory {
+public:
+    LossFactory() = delete;
+    static Loss* get_loss(std::string& name);
 };
 
 

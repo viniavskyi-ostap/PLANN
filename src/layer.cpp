@@ -3,15 +3,15 @@
 #include <iostream>
 
 
-Layer::Layer(int units_number, Activation *activation_func) {
+Layer::Layer(int units_number, std::string activation_func) {
     this->units_number = units_number;
-    this->activation_func = activation_func;
+    this->activation_func = ActivationFactory::get_activation(activation_func);
 }
 
 Layer::~Layer() {
     delete w;
     delete b;
-    delete cache;
+    delete activation_func;
 }
 
 void Layer::init_weights(int previous_units_number) {
@@ -37,7 +37,7 @@ void Layer::clear_train_cache() {
     delete cache;
 }
 
-void Layer::forward(LayersBuffer *prev, LayersBuffer *next) {
+void Layer::forward(FitLayersBuffer *prev, FitLayersBuffer *next) {
     w->multiply(*prev->a, *cache->z);
 //    std::cout << "w: " << this->w->to_string() << std::endl;
     cache->z->add_column(*b);
@@ -48,9 +48,15 @@ void Layer::forward(LayersBuffer *prev, LayersBuffer *next) {
 //    std::cout << "X: " << prev->a->to_string() << std::endl;
 //    std::cout << "b: " << this->b->to_string() << std::endl;
 //    std::cout << "A: " << next->a->to_string() << std::endl;
-    }
+}
 
-void Layer::backward(LayersBuffer *prev, LayersBuffer *next) {
+void Layer::forward(PredictLayersBuffer *prev, PredictLayersBuffer *next) {
+    w->multiply(*prev->a, *next->a);
+    next->a->add_column(*b);
+    activation_func->compute(*next->a, *next->a);
+}
+
+void Layer::backward(FitLayersBuffer *prev, FitLayersBuffer *next) {
     int m = cache->z->get_columns_number();
 
     // Calculating dz

@@ -7,13 +7,21 @@
 
 #include "matrix.h"
 
-class LayersBuffer {
+class FitLayersBuffer {
 public:
-    LayersBuffer(int units_number, int batch_size);
-    ~LayersBuffer();
+    FitLayersBuffer(int units_number, int batch_size);
+    ~FitLayersBuffer();
 
     Matrix *a;
     Matrix *da;
+};
+
+class PredictLayersBuffer {
+public:
+    PredictLayersBuffer(int units_number, int batch_size);
+    ~PredictLayersBuffer();
+
+    Matrix *a;
 };
 
 #endif //PLANN_LAYERSBUFFER_H

@@ -16,12 +16,12 @@ private:
     int units_number;
 
     Activation *activation_func = nullptr;
-    Matrix *b;
-    Matrix *w;
+    Matrix *b = nullptr;
+    Matrix *w = nullptr;
     TrainCache *cache = nullptr;
 
 public:
-    Layer(int units_number, Activation *activation_func);
+    Layer(int units_number, std::string name);
 
     ~Layer();
 
@@ -31,9 +31,11 @@ public:
 
     void clear_train_cache();
 
-    void forward(LayersBuffer *prev, LayersBuffer *next);
+    void forward(FitLayersBuffer *prev, FitLayersBuffer *next);
 
-    void backward(LayersBuffer *prev, LayersBuffer *next);
+    void forward(PredictLayersBuffer *prev, PredictLayersBuffer *next);
+
+    void backward(FitLayersBuffer *prev, FitLayersBuffer *next);
 
     int get_units_number();
 

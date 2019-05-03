@@ -16,6 +16,13 @@ public:
     virtual ~Activation() = default;
 };
 
+class ActivationFactory {
+public:
+    ActivationFactory() = delete;
+
+    static Activation* get_activation(std::string& name);
+};
+
 class SigmoidActivation : public Activation {
 public:
     void compute(Matrix &input, Matrix &result) const override;

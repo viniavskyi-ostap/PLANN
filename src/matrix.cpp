@@ -11,8 +11,18 @@ Matrix::Matrix(int rows_number, int columns_number) {
     data = new float[rows_number * columns_number];
 }
 
+Matrix::Matrix(const Matrix& o): rows_number(o.rows_number), columns_number(o.columns_number) {
+    data = new float[rows_number * columns_number];
+
+    for (int i = 0; i < rows_number; ++i) {
+        for (int j = 0; j < columns_number; ++j) {
+            set(i, j, o.get(i, j));
+        }
+    }
+}
+
 Matrix::~Matrix() {
-    delete data;
+    delete[] data;
 }
 
 inline float Matrix::get(int row, int column) const {
@@ -157,4 +167,16 @@ void Matrix::rows_submatrix(Matrix &result, std::vector<int> indexes, int start,
         std::copy(data + current_row * columns_number, data + (current_row + 1) * columns_number,
                   result.data + columns_number * i);
     }
+}
+
+double Matrix::sum() const {
+    double result = 0;
+
+    for (int row = 0; row < rows_number; ++row) {
+        for (int column = 0 ; column < columns_number; ++column) {
+            result += get(row, column);
+        }
+    }
+
+    return result;
 }

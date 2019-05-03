@@ -15,6 +15,7 @@ public:
     Matrix() = default;
 
     Matrix(int rows_number, int columns_number);
+    Matrix(const Matrix& other);
     ~Matrix();
 
     int get_rows_number() const;
@@ -42,6 +43,8 @@ public:
     void add_column(Matrix &rhs);
 
     void rows_submatrix(Matrix &result, std::vector<int> indexes, int start, int end) const;
+
+    double sum() const;
 };
 
 #endif

@@ -1,9 +1,25 @@
 #include <cmath>
 #include "activation.h"
 
-//sigmoid activation
+Activation* ActivationFactory::get_activation(std::string& name){
+    if (name == "sigmoid") {
+        return new SigmoidActivation();
+    }
+    else if (name == "relu") {
+        return new ReluActivation();
+    }
+    else if (name == "linear") {
+        return new LinearActivation();
+    }
+    else if (name == "softmax") {
+        return new SoftmaxActivation();
+    }
+
+    throw std::invalid_argument(name + " is invalid activation function.");
+}
+
 float SigmoidActivation::compute_point(float x) {
-    return 1 / (1 + expf(-x));
+    return 1 / (1 + exp(-x));
 }
 
 float SigmoidActivation::compute_derivative_point(float x) {
