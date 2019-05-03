@@ -38,12 +38,12 @@ void Layer::clear_train_cache() {
 }
 
 void Layer::forward(FitLayersBuffer *prev, FitLayersBuffer *next) {
-    w->multiply(*prev->a, *cache->z);
+    w->multiply(prev->a, cache->z);
 //    std::cout << "w: " << this->w->to_string() << std::endl;
-    cache->z->add_column(*b);
+    cache->z->add_column(b);
 //    std::cout << "z: " << this->cache->z->to_string() << std::endl;
 
-    activation_func->compute(*cache->z, *next->a);
+    activation_func->compute(cache->z, next->a);
 //    std::cout << "X size: " << prev->a->get_columns_number() << "  " << prev-> a->get_rows_number() << std::endl;
 //    std::cout << "X: " << prev->a->to_string() << std::endl;
 //    std::cout << "b: " << this->b->to_string() << std::endl;
@@ -51,30 +51,30 @@ void Layer::forward(FitLayersBuffer *prev, FitLayersBuffer *next) {
 }
 
 void Layer::forward(PredictLayersBuffer *prev, PredictLayersBuffer *next) {
-    w->multiply(*prev->a, *next->a);
-    next->a->add_column(*b);
-    activation_func->compute(*next->a, *next->a);
+    w->multiply(prev->a, next->a);
+    next->a->add_column(b);
+    activation_func->compute(next->a, next->a);
 }
 
 void Layer::backward(FitLayersBuffer *prev, FitLayersBuffer *next) {
     int m = cache->z->get_columns_number();
 
     // Calculating dz
-    activation_func->compute_derivative(*cache->z, *cache->z);
-    next->da->combine(*cache->z, [](float x, float y) { return x * y; }, *cache->dz);
+    activation_func->compute_derivative(cache->z, cache->z);
+    next->da->combine(cache->z, [](float x, float y) { return x * y; }, cache->dz);
 
     // Calculating dW
-    prev->a->transpose(*cache->at);
-    cache->dz->multiply(*cache->at, *cache->dw);
-    cache->dw->map([m](float x) { return x / m; }, *cache->dw);
+    prev->a->transpose(cache->at);
+    cache->dz->multiply(cache->at, cache->dw);
+    cache->dw->map([m](float x) { return x / m; }, cache->dw);
 
     // Calculating db
-    cache->dz->reduce_row([](float x, float y) { return x + y; }, *cache->db, 0);
-    cache->db->map([m](float x) { return x / m; }, *cache->db);
+    cache->dz->reduce_row([](float x, float y) { return x + y; }, cache->db, 0);
+    cache->db->map([m](float x) { return x / m; }, cache->db);
 
     // Calculating dA
-    w->transpose(*cache->wt);
-    cache->wt->multiply(*cache->dz, *prev->da);
+    w->transpose(cache->wt);
+    cache->wt->multiply(cache->dz, prev->da);
 }
 
 int Layer::get_units_number() {
@@ -82,9 +82,9 @@ int Layer::get_units_number() {
 }
 
 void Layer::update_weights(float rate) {
-    cache->dw->map([rate](float x) { return rate * x; }, *cache->dw);
-    cache->db->map([rate](float x) { return rate * x; }, *cache->db);
-//    //
-    w->combine(*cache->dw, [](float x, float y) { return x - y; }, *w);
-    b->combine(*cache->db, [](float x, float y) { return x - y; }, *b);
+    cache->dw->map([rate](float x) { return rate * x; }, cache->dw);
+    cache->db->map([rate](float x) { return rate * x; }, cache->db);
+
+    w->combine(cache->dw, [](float x, float y) { return x - y; }, w);
+    b->combine(cache->db, [](float x, float y) { return x - y; }, b);
 }

@@ -20,12 +20,12 @@ private:
 
 public:
     Model(int input_size, std::vector<Layer *> layers);
+
     ~Model();
 
-    void fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, std::string loss_func_name);
-    Matrix predict(Matrix &x);
+    void fit(Matrix *x, Matrix *y, int batch_size, float rate, int epochs, std::string loss_func_name);
 
-//    Matrix predict(Matrix& x);
+    Matrix predict(Matrix *x);
 
     void init_weights();
 };

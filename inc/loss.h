@@ -10,9 +10,9 @@
 
 class Loss {
 public:
-    virtual float compute(Matrix &y_predicted, Matrix &y_true, Matrix &result) const = 0;
+    virtual float compute(Matrix *y_predicted, Matrix *y_true, Matrix *result) const = 0;
 
-    virtual void compute_derivative(Matrix &y_predicted, Matrix &y_true, Matrix &result) const = 0;
+    virtual void compute_derivative(Matrix *y_predicted, Matrix *y_true, Matrix *result) const = 0;
 
     virtual ~Loss() = default;
 
@@ -22,15 +22,16 @@ public:
 class LossFactory {
 public:
     LossFactory() = delete;
-    static Loss* get_loss(std::string& name);
+
+    static Loss *get_loss(std::string &name);
 };
 
 
 class MeanSquareError : public Loss {
 public:
-    float compute(Matrix &y_predicted, Matrix &y_true, Matrix &result) const override;
+    float compute(Matrix *y_predicted, Matrix *y_true, Matrix *result) const override;
 
-    void compute_derivative(Matrix &y_predicted, Matrix &y_true, Matrix &result) const override;
+    void compute_derivative(Matrix *y_predicted, Matrix *y_true, Matrix *result) const override;
 };
 
 #endif //PLANN_LOSS_H

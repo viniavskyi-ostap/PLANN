@@ -39,19 +39,19 @@ std::vector<T *> Model::create_layers_buffer(int batch_size) {
     return buffers;
 }
 
-void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, std::string loss_func_name) {
-    Loss* loss_func = LossFactory::get_loss(loss_func_name);
+void Model::fit(Matrix *x, Matrix *y, int batch_size, float rate, int epochs, std::string loss_func_name) {
+    Loss *loss_func = LossFactory::get_loss(loss_func_name);
 
     for (auto layer: layers) layer->init_train_cache(batch_size);
     std::vector<FitLayersBuffer *> buffers = create_layers_buffer<FitLayersBuffer>(batch_size);
-    Matrix x_batch(batch_size, x.get_columns_number());
-    Matrix y_batch(batch_size, y.get_columns_number());
+    Matrix x_batch(batch_size, x->get_columns_number());
+    Matrix y_batch(batch_size, y->get_columns_number());
 
     std::vector<int> indexes;
     std::random_device rd;
     std::mt19937 g(rd());
-    indexes.reserve((size_t) x.get_rows_number());
-    for (int i = 0; i < x.get_rows_number(); ++i)
+    indexes.reserve((size_t) x->get_rows_number());
+    for (int i = 0; i < x->get_rows_number(); ++i)
         indexes.push_back(i);
 
     Matrix current_res(layers[layers.size() - 1]->get_units_number(), batch_size);
@@ -61,9 +61,9 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, st
 
         for (int j = 0; j + batch_size <= indexes.size(); j += batch_size) {
             // cut batch matrices
-            x.rows_submatrix(x_batch, indexes, j, j + batch_size);
-            y.rows_submatrix(y_batch, indexes, j, j + batch_size);
-            x_batch.transpose(*buffers[0]->a);
+            x->rows_submatrix(&x_batch, indexes, j, j + batch_size);
+            y->rows_submatrix(&y_batch, indexes, j, j + batch_size);
+            x_batch.transpose(buffers[0]->a);
 
             //forward propagation
             for (int z = 0; z < layers.size(); ++z) {
@@ -71,11 +71,11 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, st
             }
 
             // back propagation
-            y_batch.transpose(*buffers[buffers.size() - 1]->da);
-            total_loss += loss_func->compute(*buffers[buffers.size() - 1]->a, *buffers[buffers.size() - 1]->da,
-                                             current_res);
-            loss_func->compute_derivative(*buffers[buffers.size() - 1]->a, *buffers[buffers.size() - 1]->da,
-                                          *buffers[buffers.size() - 1]->da);
+            y_batch.transpose(buffers[buffers.size() - 1]->da);
+            total_loss += loss_func->compute(buffers[buffers.size() - 1]->a, buffers[buffers.size() - 1]->da,
+                                             &current_res);
+            loss_func->compute_derivative(buffers[buffers.size() - 1]->a, buffers[buffers.size() - 1]->da,
+                                          buffers[buffers.size() - 1]->da);
             for (int z = (int) (layers.size() - 1); z >= 0; --z) {
                 layers[z]->backward(buffers[z], buffers[z + 1]);
 
@@ -85,27 +85,27 @@ void Model::fit(Matrix &x, Matrix &y, int batch_size, float rate, int epochs, st
 
         }
 
-        std::cout <<  "Current total loss: " <<  total_loss << std::endl;
+        std::cout << "Current total loss: " << total_loss << std::endl;
     }
 
     for (auto buffer : buffers) delete buffer;
     for (auto layer: layers) layer->clear_train_cache();
 }
 
-Matrix Model::predict(Matrix& x) {
-    int size = x.get_rows_number();
+Matrix Model::predict(Matrix *x) {
+    int size = x->get_rows_number();
 
     std::vector<PredictLayersBuffer *> buffers = create_layers_buffer<PredictLayersBuffer>(size);
 
-    x.transpose(*buffers[0]->a);
+    x->transpose(buffers[0]->a);
     //forward propagation
     for (int i = 0; i < layers.size(); ++i) {
         layers[i]->forward(buffers[i], buffers[i + 1]);
     }
 
-    Matrix* final_buffer = buffers[buffers.size() - 1]->a;
+    Matrix *final_buffer = buffers[buffers.size() - 1]->a;
     Matrix result(final_buffer->get_columns_number(), final_buffer->get_rows_number());
-    final_buffer->transpose(result);
+    final_buffer->transpose(&result);
     for (auto buffer : buffers) delete buffer;
     return result;
 }

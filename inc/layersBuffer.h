@@ -10,6 +10,7 @@
 class FitLayersBuffer {
 public:
     FitLayersBuffer(int units_number, int batch_size);
+
     ~FitLayersBuffer();
 
     Matrix *a;
@@ -19,6 +20,7 @@ public:
 class PredictLayersBuffer {
 public:
     PredictLayersBuffer(int units_number, int batch_size);
+
     ~PredictLayersBuffer();
 
     Matrix *a;

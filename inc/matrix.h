@@ -15,7 +15,9 @@ public:
     Matrix() = default;
 
     Matrix(int rows_number, int columns_number);
-    Matrix(const Matrix& other);
+
+    Matrix(const Matrix &other);
+
     ~Matrix();
 
     int get_rows_number() const;
@@ -28,23 +30,23 @@ public:
 
     std::string to_string();
 
-    void multiply(Matrix &rhs, Matrix &result) const;
+    void multiply(Matrix *rhs, Matrix *result) const;
 
-    void optimised_multiply(const Matrix &rhs, Matrix &result) const;
+    void optimised_multiply(const Matrix *rhs, Matrix *result) const;
 
-    void transpose(Matrix &result) const;
+    void transpose(Matrix *result) const;
 
-    void map(std::function<float(float)> f, Matrix &result) const;
+    void map(std::function<float(float)> f, Matrix *result) const;
 
-    void combine(Matrix &rhs, std::function<float(float, float)> f, Matrix &result) const;
+    void combine(Matrix *rhs, std::function<float(float, float)> f, Matrix *result) const;
 
-    void reduce_row(std::function<float(float, float)> f, Matrix &result, float initial_value) const;
+    void reduce_row(std::function<float(float, float)> f, Matrix *result, float initial_value) const;
 
-    void add_column(Matrix &rhs);
+    void add_column(Matrix *rhs);
 
-    void rows_submatrix(Matrix &result, std::vector<int> indexes, int start, int end) const;
+    void rows_submatrix(Matrix *result, std::vector<int> indexes, int start, int end) const;
 
-    double sum() const;
+    float sum() const;
 };
 
 #endif
