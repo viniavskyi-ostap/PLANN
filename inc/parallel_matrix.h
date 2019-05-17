@@ -1,15 +1,14 @@
-//
-// Created by ostap on 17.05.19.
-//
-
 #ifndef PLANN_PARALLEL_MATRIX_H
 #define PLANN_PARALLEL_MATRIX_H
 
 #include <vector>
 #include <string>
 #include <functional>
+#include "ThreadPool.h"
 
 class Matrix {
+    static ThreadPool thread_pool;
+
     int rows_number;
     int columns_number;
 

@@ -1,7 +1,7 @@
 #include "matrix_tasks.h"
 
 
-void map_task(const std::function<float(float)> &f, Matrix *source, Matrix *result, int start, int end) {
+void map_task(const std::function<float(float)> &f, const Matrix *source, Matrix *result, int start, int end) {
     int row_size = source->get_columns_number();
 
     for (int i = start; i < end; ++i) {
@@ -11,8 +11,9 @@ void map_task(const std::function<float(float)> &f, Matrix *source, Matrix *resu
     }
 }
 
-void combine_task(const std::function<float(float, float)> &f, Matrix *source1, Matrix *source2, Matrix *result,
-                  int start, int end) {
+void
+combine_task(const std::function<float(float, float)> &f, const Matrix *source1, const Matrix *source2, Matrix *result,
+             int start, int end) {
     int row_size = source1->get_columns_number();
 
     for (int i = start; i < end; ++i) {
@@ -22,7 +23,7 @@ void combine_task(const std::function<float(float, float)> &f, Matrix *source1, 
     }
 }
 
-void map_indexed_task(const std::function<float(float, int, int)> &f, Matrix *source, Matrix *result,
+void map_indexed_task(const std::function<float(float, int, int)> &f, const Matrix *source, Matrix *result,
                       int start, int end) {
     int row_size = source->get_columns_number();
 
@@ -33,7 +34,7 @@ void map_indexed_task(const std::function<float(float, int, int)> &f, Matrix *so
     }
 }
 
-void transpose_task(Matrix *source, Matrix *result, int start, int end) {
+void transpose_task(const Matrix *source, Matrix *result, int start, int end) {
     int row_size = source->get_columns_number();
 
     for (int i = start; i < end; ++i) {
@@ -43,7 +44,7 @@ void transpose_task(Matrix *source, Matrix *result, int start, int end) {
     }
 }
 
-void reduce_row_task(std::function<float(float, float)> f, Matrix *source, Matrix *result,
+void reduce_row_task(std::function<float(float, float)> f, const Matrix *source, Matrix *result,
                      float initial_value, int start, int end) {
     int row_size = source->get_columns_number();
     float current_result;
@@ -57,7 +58,7 @@ void reduce_row_task(std::function<float(float, float)> f, Matrix *source, Matri
     }
 }
 
-void add_column(Matrix *source, Matrix *rhs, int start, int end) {
+void add_column_task(Matrix *source, const Matrix *rhs, int start, int end) {
     int row_size = source->get_columns_number();
     float current_summand;
 
@@ -69,19 +70,22 @@ void add_column(Matrix *source, Matrix *rhs, int start, int end) {
     }
 }
 
-float sum_task(Matrix *source, int start, int end) {
+void sum_task(const Matrix *source, std::mutex &mutex, float &result, int start, int end) {
     int row_size = source->get_columns_number();
-    float result = 0;
+    float current_result = 0;
 
     for (int i = start; i < end; ++i) {
         for (int j = 0; j < row_size; ++j) {
            result += source->get(i, j);
         }
     }
-    return result;
+
+    mutex.lock();
+    result += current_result;
+    mutex.unlock();
 }
 
-void multiply_task(Matrix *source1, Matrix *source2, Matrix *result, int start, int end){
+void multiply_task(const Matrix *source1, const Matrix *source2, Matrix *result, int start, int end) {
     int source1_row_size = source1->get_columns_number();
     int source2_row_size = source2->get_columns_number();
 

@@ -56,11 +56,14 @@ class ThreadPool {
     std::vector<std::thread> threads;
     Joiner joiner;
 
+    std::atomic_uint tasks_count;
+
     void worker_thread() {
         while(!done) {
             task_function task;
             if (work_queue.try_pop(task)) {
                 task();
+                --tasks_count;
             } else {
                 std::this_thread::yield();
             }
@@ -84,6 +87,14 @@ public:
     template<typename FunctionType>
     void submit(FunctionType f) {
         work_queue.push(task_function(f));
+        ++tasks_count;
+    }
+
+    void wait() {
+        for (int i = 0; tasks_count != 0; ++i) {
+            if (i % 1000 == 0)
+                std::this_thread::yield();
+        }
     }
 };
 
