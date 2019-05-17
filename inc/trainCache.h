@@ -5,7 +5,7 @@
 #ifndef PLANN_TRAINCASHE_H
 #define PLANN_TRAINCASHE_H
 
-#include "matrix.h"
+#include "parallel_matrix.h"
 
 class TrainCache {
 public:

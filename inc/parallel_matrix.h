@@ -18,6 +18,8 @@ public:
     Matrix() = default;
 
     Matrix(int rows_number, int columns_number);
+    
+    Matrix(int rows_number,  int columns_number, float *array);
 
     Matrix(const Matrix &other);
 

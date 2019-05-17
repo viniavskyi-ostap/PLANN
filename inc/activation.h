@@ -5,7 +5,7 @@
 #ifndef PLANN_ACTIVATION_H
 #define PLANN_ACTIVATION_H
 
-#include "matrix.h"
+#include "parallel_matrix.h"
 
 class Activation {
 public:

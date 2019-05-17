@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 
 Matrix::Matrix(int rows_number, int columns_number) {
@@ -62,6 +63,7 @@ void Matrix::multiply(Matrix *rhs, Matrix *result) const {
         throw std::invalid_argument("Matrix sizes don't match.");
     }
 
+//    std::cout<< "Sequential" << std::endl;
     for (int row = 0; row < result->rows_number; row++) {
         for (int column = 0; column < result->columns_number; column++) {
             float value = 0;

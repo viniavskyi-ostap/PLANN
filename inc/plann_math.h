@@ -5,7 +5,7 @@
 #ifndef PLANN_HELPERS_C
 #define PLANN_HELPERS_H
 
-#include "matrix.h"
+#include "parallel_matrix.h"
 
 Matrix softmax(const Matrix& x);
 

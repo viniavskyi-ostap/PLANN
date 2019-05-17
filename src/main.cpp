@@ -83,7 +83,7 @@ void useless_func() {
 
     std::cout << y.to_string() << std::endl;
 
-    m.fit(&x, &y, 10, 0.01f, 1, "categorical-cross-entropy");
+    m.fit(&x, &y, 10, 0.001f, 1, "mse");
 
     Matrix in(1, 4);
     for (int i = 0; i < 4; i++) {

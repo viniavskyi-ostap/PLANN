@@ -25,6 +25,18 @@ Matrix::Matrix(const Matrix &o) : rows_number(o.rows_number), columns_number(o.c
     }
 }
 
+Matrix::Matrix(int rows_number,  int columns_number, float *array) {
+    data = new float[rows_number * columns_number];
+    this->rows_number = rows_number;
+    this->columns_number = columns_number;
+
+    for (int i = 0; i < rows_number; ++i) {
+        for (int j = 0; j < columns_number; ++j) {
+            set(i, j, array[i * columns_number + j]);
+        }
+    }
+}
+
 Matrix::~Matrix() {
     delete[] data;
 }

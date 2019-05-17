@@ -5,7 +5,7 @@
 #ifndef PLANN_LOSS_H
 #define PLANN_LOSS_H
 
-#include "matrix.h"
+#include "parallel_matrix.h"
 
 
 class Loss {

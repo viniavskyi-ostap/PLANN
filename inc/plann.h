@@ -9,7 +9,7 @@
 #include "model.h"
 #include "layer.h"
 #include "loss.h"
-#include "matrix.h"
+#include "parallel_matrix.h"
 #include "plann_math.h"
 
 #endif //PLANN_PLANN_H
