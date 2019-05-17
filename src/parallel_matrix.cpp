@@ -4,7 +4,10 @@
 #include <iomanip>
 #include <matrix_tasks.h>
 #include <mutex>
+#include <cmath>
 
+#define WORK_AMOUNT (1e5)
+#define WORK_AMOUNT_BY_ROWS(matrix) (floor(WORK_AMOUNT / matrix->columns_number))
 
 ThreadPool Matrix::thread_pool;
 
@@ -61,54 +64,123 @@ std::string Matrix::to_string() {
 
 
 void Matrix::map(std::function<float(float)> f, Matrix *result) const {
-    for (int i = 0; i < result->rows_number; ++i) {
-        thread_pool.submit([f, this, result, i]() { map_task(f, this, result, i, i + 1); });
+    if (rows_number != result->rows_number || columns_number != result->columns_number) {
+        throw std::invalid_argument("Matrix sizes don't match.");
+    }
+
+    int k = WORK_AMOUNT_BY_ROWS(this);
+
+    for (int start = 0; start < result->rows_number; ++start) {
+        int end = start + k;
+        end = end > result->rows_number ? result->rows_number : end;
+
+        thread_pool.submit([f, this, result, start, end]() { map_task(f, this, result, start, end); });
     }
     thread_pool.wait();
 }
 
 
 void Matrix::multiply(Matrix *rhs, Matrix *result) const {
-    for (int i = 0; i < result->rows_number; ++i) {
-        thread_pool.submit([this, rhs, result, i]() { multiply_task(this, rhs, result, i, i + 1); });
+    if (columns_number != rhs->rows_number ||
+        rows_number != result->rows_number ||
+        rhs->columns_number != result->columns_number) {
+        throw std::invalid_argument("Matrix sizes don't match.");
+    }
+
+    int k = floor(WORK_AMOUNT / (this->columns_number * rhs->rows_number));
+
+    for (int start = 0; start < result->rows_number; ++start) {
+        int end = start + k;
+        end = end > result->rows_number ? result->rows_number : end;
+        thread_pool.submit([this, rhs, result, start, end]() { multiply_task(this, rhs, result, start, end); });
     }
     thread_pool.wait();
 }
 
 
 void Matrix::transpose(Matrix *result) const {
-    for (int i = 0; i < result->rows_number; ++i) {
-        thread_pool.submit([this, result, i]() { transpose_task(this, result, i, i + 1); });
+    if (columns_number != result->rows_number || rows_number != result->columns_number) {
+        throw std::invalid_argument("Matrix sizes don't match.");
+    }
+
+    int k = WORK_AMOUNT_BY_ROWS(this);
+
+    for (int start = 0; start < result->rows_number; ++start) {
+        int end = start + k;
+        end = end > result->rows_number ? result->rows_number : end;
+
+        thread_pool.submit([this, result, start, end]() { transpose_task(this, result, start, end); });
     }
     thread_pool.wait();
 }
 
 void Matrix::map_indexed(const float (*f)(float, int, int), Matrix *result) const {
-    for (int i = 0; i < result->rows_number; ++i) {
-        thread_pool.submit([f, this, result, i]() { map_indexed_task(f, this, result, i, i + 1); });
+    if (rows_number != result->rows_number || columns_number != result->columns_number) {
+        throw std::invalid_argument("Matrix sizes don't match.");
+    }
+
+
+    int k = WORK_AMOUNT_BY_ROWS(this);
+
+    for (int start = 0; start < result->rows_number; ++start) {
+        int end = start + k;
+        end = end > result->rows_number ? result->rows_number : end;
+
+        thread_pool.submit([f, this, result, start, end]() { map_indexed_task(f, this, result, start, end); });
     }
     thread_pool.wait();
 }
 
 void Matrix::combine(Matrix *rhs, std::function<float(float, float)> f, Matrix *result) const {
-    for (int i = 0; i < result->rows_number; ++i) {
-        thread_pool.submit([f, this, rhs, result, i]() { combine_task(f, this, rhs, result, i, i + 1); });
+    if (rows_number != rhs->rows_number || columns_number != rhs->columns_number ||
+        rows_number != result->rows_number ||
+        columns_number != result->columns_number) {
+        throw std::invalid_argument("Matrix sizes don't match.");
+    }
+
+    int k = WORK_AMOUNT_BY_ROWS(this);
+
+    for (int start = 0; start < result->rows_number; ++start) {
+        int end = start + k;
+        end = end > result->rows_number ? result->rows_number : end;
+
+        thread_pool.submit([f, this, rhs, result, start, end]() { combine_task(f, this, rhs, result, start, end); });
     }
     thread_pool.wait();
 }
 
 void Matrix::reduce_row(std::function<float(float, float)> f, Matrix *result, float initial_value) const {
-    for (int i = 0; i < result->rows_number; ++i) {
+    if (rows_number != result->rows_number || result->columns_number != 1) {
+        throw std::invalid_argument("Result must be a column vector with number of rows equal to matrices's.");
+    }
+
+    int k = WORK_AMOUNT_BY_ROWS(this);
+
+    for (int start = 0; start < result->rows_number; ++start) {
+        int end = start + k;
+        end = end > result->rows_number ? result->rows_number : end;
+
         thread_pool.submit(
-                [f, this, result, initial_value, i]() { reduce_row_task(f, this, result, initial_value, i, i + 1); });
+                [f, this, result, initial_value, start, end]() {
+                    reduce_row_task(f, this, result, initial_value, start, end);
+                });
     }
     thread_pool.wait();
 }
 
 void Matrix::add_column(Matrix *rhs) {
-    for (int i = 0; i < this->rows_number; ++i) {
+    if (rhs->columns_number != 1 || rows_number != rhs->rows_number) {
+        throw std::invalid_argument("Right hand side should be a column vector.");
+    }
+
+    int k = WORK_AMOUNT_BY_ROWS(this);
+
+    for (int start = 0; start < this->rows_number; ++start) {
+        int end = start + k;
+        end = end > this->rows_number ? this->rows_number : end;
+
         thread_pool.submit(
-                [this, rhs, i]() { add_column_task(this, rhs, i, i + 1); });
+                [this, rhs, start, end]() { add_column_task(this, rhs, start, end); });
     }
     thread_pool.wait();
 }
@@ -122,6 +194,7 @@ void Matrix::rows_submatrix(Matrix *result, std::vector<int> indexes, int start,
     int current_row;
     for (int i = 0; i + start < end; ++i) {
         current_row = indexes[i + start];
+
         std::copy(data + current_row * columns_number, data + (current_row + 1) * columns_number,
                   result->data + columns_number * i);
     }
@@ -131,9 +204,14 @@ float Matrix::sum() const {
     std::mutex mutex;
     float result = 0;
 
-    for (int i = 0; i < this->rows_number; ++i) {
+    int k = WORK_AMOUNT_BY_ROWS(this);
+
+    for (int start = 0; start < this->rows_number; ++start) {
+        int end = start + k;
+        end = end > this->rows_number ? this->rows_number : end;
+
         thread_pool.submit(
-                [this, &mutex, &result, i]() { sum_task(this, mutex, result, i, i + 1); });
+                [this, &mutex, &result, start, end]() { sum_task(this, mutex, result, start, end); });
     }
     thread_pool.wait();
 
