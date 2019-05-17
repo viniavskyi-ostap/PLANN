@@ -6,6 +6,7 @@
 #include <functional>
 #include "ThreadPool.h"
 
+
 class Matrix {
     static ThreadPool thread_pool;
 
