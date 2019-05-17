@@ -3,10 +3,11 @@ project(PLANN)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(header_files inc/activation.h inc/layersBuffer.h inc/matrix.h inc/trainCache.h inc/layer.h inc/loss.h inc/model.h)
-set(source_files src/activation.cpp src/layersBuffer.cpp src/matrix.cpp src/trainCache.cpp src/layer.cpp src/model.cpp src/loss.cpp inc/plann.h inc/plann_math.h src/plann_math.cpp inc/ThreadPool.h)
-
 find_package(Threads REQUIRED)
+set(header_files inc/activation.h inc/layersBuffer.h inc/matrix.h inc/trainCache.h inc/layer.h inc/loss.h
+        inc/model.h inc/plann.h inc/plann_math.h inc/parallel_matrix.h inc/matrix_tasks.h inc/ThreadPool.h)
+set(source_files src/activation.cpp src/layersBuffer.cpp src/matrix.cpp src/trainCache.cpp src/layer.cpp
+        src/model.cpp src/loss.cpp src/plann_math.cpp src/parallel_matrix.cpp src/matrix_tasks.cpp)
 
 include_directories(inc src)
 

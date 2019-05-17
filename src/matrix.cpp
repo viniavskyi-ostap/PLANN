@@ -115,7 +115,7 @@ void Matrix::map(std::function<float(float)> f, Matrix *result) const {
     }
 }
 
-void Matrix::mapIndexed(const float (*f)(float, int, int), Matrix *result) const {
+void Matrix::map_indexed(const float (*f)(float, int, int), Matrix *result) const {
     if (rows_number != result->rows_number || columns_number != result->columns_number) {
         throw std::invalid_argument("Matrix sizes don't match.");
     }
