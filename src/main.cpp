@@ -8,6 +8,7 @@
 
 void test_first(), test_second();
 
+
 int main() {
     Model m(4, std::vector<Layer *>{
             new Layer(4, "relu"),

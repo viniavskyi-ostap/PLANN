@@ -89,6 +89,7 @@ void Model::fit(Matrix *x, Matrix *y, int batch_size, float rate, int epochs, st
         std::cout << "Current total loss: " << total_loss << std::endl;
     }
 
+    delete loss_func;
     for (auto buffer : buffers) delete buffer;
     for (auto layer: layers) layer->clear_train_cache();
 }
