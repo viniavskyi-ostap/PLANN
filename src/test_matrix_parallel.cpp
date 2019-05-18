@@ -19,7 +19,7 @@ float combine_func(float x, float y) {
 }
 
 int main() {
-    const int size = 300;
+    const int size = 3000;
     auto x = Matrix(size, size);
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++)

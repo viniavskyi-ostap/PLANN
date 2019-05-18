@@ -23,7 +23,7 @@ public:
     int get_rows_number() const;
 
     int get_columns_number() const;
-    
+
     inline float get(int row, int column) const {
         return data[columns_number * row + column];
     }
@@ -34,9 +34,7 @@ public:
 
     std::string to_string();
 
-    void multiply(Matrix *rhs, Matrix *result) const;
-
-    void optimised_multiply(const Matrix *rhs, Matrix *result) const;
+    void multiply(const Matrix *rhs, Matrix *result) const;
 
     void transpose(Matrix *result) const;
 

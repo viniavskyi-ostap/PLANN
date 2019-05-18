@@ -48,23 +48,19 @@ std::string Matrix::to_string() {
     return ss.str();
 }
 
-void Matrix::multiply(Matrix *rhs, Matrix *result) const {
-    if (columns_number != rhs->rows_number ||
-        rows_number != result->rows_number ||
-        rhs->columns_number != result->columns_number) {
-        throw std::invalid_argument("Matrix sizes don't match.");
-    }
+void Matrix::multiply(const Matrix *rhs, Matrix *result) const {
+    for (int row = 0; row < result->rows_number; ++row) {
+        for (int column = 0; column < result->columns_number; ++column) {
+            result->set(row, column, 0);
+        }
 
-//    std::cout<< "Sequential" << std::endl;
-    for (int row = 0; row < result->rows_number; row++) {
-        for (int column = 0; column < result->columns_number; column++) {
-            float value = 0;
+        for (int k = 0; k < columns_number; ++k) {
+            float this_value = data[row * rows_number + k];
 
-            for (int k = 0; k < columns_number; k++) {
-                value += get(row, k) * rhs->get(k, column);
+            for (int column = 0; column < result->columns_number; ++column) {
+                result->data[row * result->columns_number + column] +=
+                        this_value * rhs->data[k * rhs->columns_number + column];
             }
-
-            result->set(row, column, value);
         }
     }
 }
