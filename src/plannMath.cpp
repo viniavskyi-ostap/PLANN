@@ -1,5 +1,5 @@
-#include <plann_math.h>
 #include <cmath>
+#include "plannMath.h"
 
 Matrix softmax(const Matrix& x) {
     Matrix result(x.get_rows_number(), x.get_columns_number());

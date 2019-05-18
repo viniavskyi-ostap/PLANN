@@ -5,8 +5,8 @@
 #ifndef PLANN_MATRIX_TASKS_H
 #define PLANN_MATRIX_TASKS_H
 
-#include "parallel_matrix.h"
 #include <mutex>
+#include "parallelMatrix.h"
 
 void map_task(const std::function<float(float)> &f, const Matrix *source,  Matrix *result, int start, int end);
 

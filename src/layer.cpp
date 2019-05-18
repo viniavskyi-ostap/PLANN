@@ -1,6 +1,6 @@
-#include "layer.h"
 #include <random>
 #include <iostream>
+#include "layer.h"
 
 
 Layer::Layer(int units_number, std::string activation_func) {

@@ -23,10 +23,14 @@ public:
     int get_rows_number() const;
 
     int get_columns_number() const;
+    
+    inline float get(int row, int column) const {
+        return data[columns_number * row + column];
+    }
 
-    float get(int row, int column) const;
-
-    void set(int row, int column, float value);
+    inline void set(int row, int column, float value) {
+        data[columns_number * row + column] = value;
+    }
 
     std::string to_string();
 

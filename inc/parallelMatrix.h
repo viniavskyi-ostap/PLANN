@@ -30,15 +30,17 @@ public:
 
     int get_columns_number() const;
 
-    float get(int row, int column) const;
+    inline float get(int row, int column) const {
+        return data[columns_number * row + column];
+    }
 
-    void set(int row, int column, float value);
+    inline void set(int row, int column, float value) {
+        data[columns_number * row + column] = value;
+    }
 
-    std::string to_string();
+    std::string to_string() const;
 
     void multiply(Matrix *rhs, Matrix *result) const;
-
-    void optimised_multiply(const Matrix *rhs, Matrix *result) const;
 
     void transpose(Matrix *result) const;
 

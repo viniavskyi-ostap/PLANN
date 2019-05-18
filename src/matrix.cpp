@@ -1,8 +1,8 @@
-#include "matrix.h"
 #include <stdexcept>
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include "matrix.h"
 
 
 Matrix::Matrix(int rows_number, int columns_number) {
@@ -24,14 +24,6 @@ Matrix::Matrix(const Matrix &o) : rows_number(o.rows_number), columns_number(o.c
 
 Matrix::~Matrix() {
     delete[] data;
-}
-
-inline float Matrix::get(int row, int column) const {
-    return data[columns_number * row + column];
-}
-
-inline void Matrix::set(int row, int column, float value) {
-    data[columns_number * row + column] = value;
 }
 
 int Matrix::get_rows_number() const {
@@ -73,23 +65,6 @@ void Matrix::multiply(Matrix *rhs, Matrix *result) const {
             }
 
             result->set(row, column, value);
-        }
-    }
-}
-
-void Matrix::optimised_multiply(const Matrix *rhs, Matrix *result) const {
-    for (int row = 0; row < result->rows_number; ++row) {
-        for (int column = 0; column < result->columns_number; ++column) {
-            result->set(row, column, 0);
-        }
-
-        for (int k = 0; k < columns_number; ++k) {
-            float this_value = data[row * rows_number + k];
-
-            for (int column = 0; column < result->columns_number; ++column) {
-                result->data[row * result->columns_number + column] +=
-                        this_value * rhs->data[k * rhs->columns_number + column];
-            }
         }
     }
 }

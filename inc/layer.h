@@ -5,7 +5,7 @@
 #ifndef PLANN_LAYER_H
 #define PLANN_LAYER_H
 
-#include "parallel_matrix.h"
+#include "parallelMatrix.h"
 #include "activation.h"
 #include "trainCache.h"
 #include "layersBuffer.h"

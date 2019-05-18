@@ -5,7 +5,7 @@
 #ifndef PLANN_LAYERSBUFFER_H
 #define PLANN_LAYERSBUFFER_H
 
-#include "parallel_matrix.h"
+#include "parallelMatrix.h"
 
 class FitLayersBuffer {
 public:

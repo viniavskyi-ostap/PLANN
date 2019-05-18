@@ -1,4 +1,4 @@
-#include "matrix_tasks.h"
+#include "matrixTasks.h"
 
 
 void map_task(const std::function<float(float)> &f, const Matrix *source, Matrix *result, int start, int end) {
@@ -37,7 +37,6 @@ void map_indexed_task(const std::function<float(float, int, int)> &f, const Matr
 void transpose_task(const Matrix *source, Matrix *result, int start, int end) {
     int row_size = source->get_columns_number();
 
-    // TODO
     for (int i = start; i < end; ++i) {
         for (int j = 0; j < row_size; ++j) {
             result->set(j, i, source->get(i, j));
